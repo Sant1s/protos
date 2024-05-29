@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "molva.sso.v1;ssov1";
+
+import "google/protobuf/empty.proto";
+
+// Auth is service for managing permissions and roles.
+service Auth {
+  // Register registers a new user.
+  rpc Register (RegisterRequest) returns (RegisterResponse);
+  // Login logs in a user and returns an auth token.
+  rpc Login (LoginRequest) returns (LoginResponse);
+}
+
+service Permissions {
+  // GetUserPermissions return user permissions
+  rpc GetUserPermissions(GetUserPermissionsRequest) returns (GetUserPermissionsResponse);
+  // AllowUserPermission allow user permissions
+  rpc AllowUserPermissions(AllowUserPermissionsRequest) returns (AllowUserPermissionsResponse);
+  // IsModerator checks is user have moderator status
+  rpc IsModerator (IsModeratorRequest) returns (IsModeratorResponse);
+}
+
+message RegisterRequest {
+  string email = 1; // Email of the user to register.
+  string password = 2; // Password of the user to register.
+}
+
+message RegisterResponse {
+  int64 user_id = 1; // User ID of the registered user.
+}
+
+message LoginRequest {
+  string email = 1; // Email of the user to login.
+  string password = 2; // Password of the user to login.
+  int32 app_id = 3; // ID of the app to login to.
+}
+
+message LoginResponse {
+  string token = 1; // Auth token of the logged in user.
+}
+
+message IsModeratorRequest {
+  int64 user_id = 1; // User ID of the registered user.
+}
+
+message IsModeratorResponse {
+  bool is_moderator = 1; // Is user have moderator permission.
+}
+
+message GetUserPermissionsRequest {
+  int64 user_id = 1; // User ID of the registered user.
+}
+
+message GetUserPermissionsResponse {
+  map<string, bool> user_permissions = 1; // User's permissions.
+}
+
+message AllowUserPermissionsRequest {
+  int64 user_id = 1; // User ID of the registered user.
+  map<string, google.protobuf.Empty> permissions = 2; // Permissions to allow for user.
+}
+
+message AllowUserPermissionsResponse {
+  map<string, bool> allowed_permissions = 1; // Allowed permissions for user.
+}
