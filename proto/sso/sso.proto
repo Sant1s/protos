@@ -21,6 +21,17 @@ service Permissions {
   rpc AllowUserPermissions(AllowUserPermissionsRequest) returns (AllowUserPermissionsResponse);
   // IsModerator checks is user have moderator status
   rpc IsModerator (IsModeratorRequest) returns (IsModeratorResponse);
+  // Validate validates user
+  rpc Validate (ValidateRequest) returns (ValidateResponse);
+}
+
+message ValidateRequest {
+  string token = 1; // Token of the user to validate.
+}
+
+message ValidateResponse {
+  bool valid = 1; // Is the token valid.
+  string error = 2; // Error message.
 }
 
 message RegisterRequest {
